@@ -1,5 +1,5 @@
 # cu_stats_XXX.txt Throughput Parser
-online calculate: https://dustinchen26.github.io/parse_cu
+online calculate: https://dustinchen26.github.io/parse_cu_upload
 
 ## Example
 ● Please paste the whole "cu_stats_XXX.txt" content below, and it will parse the non-zero Throughput value.
