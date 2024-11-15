@@ -1,0 +1,100 @@
+<!-- 
+  Copyright © [2023] [Dustin_Chen]. All rights reserved.
+  Author: Dustin_Chen
+  Email:  Dustin_Chen@compal.com or chuhpsdustin@gmail.com
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parse cu_stats_XXX.txt Throughput upload</title>
+    <style>
+        body {
+            line-height: 1.2;
+            font-size: 14px;
+            font-family: Roboto, sans-serif;
+            white-space: nowrap; /* Prevent automatic line breaks */
+            overflow-x: auto; /* Enable horizontal scrollbar */
+        }
+
+        .gnb-stats {
+            color: black;
+            font-size: 12px;
+        }
+
+        .udp-dl-tx {
+            color: blue;
+            font-size: 12px;
+        }
+
+        .udp-ul-tx {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
+    <script>
+        // Function to parse the file content
+        function parseFile(file) {
+            var reader = new FileReader();
+
+            reader.onload = function(event) {
+                var inputText = event.target.result;
+                var lines = inputText.split("\n");
+                var output = "";
+
+                // Iterate over lines and parse
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i];
+
+                    if (line.includes("GNB MGR STATISTICS")) {
+                        output += '<br><span class="gnb-stats">' + line + '</span>';
+                    } else if (line.includes("UDP-DL-Tx")) {
+                        // Modify this line to exclude "[ CUMM-TX-FAIL: 0]"
+                        var udpDlTxLine = line.replace(/\[ CUMM-TX-FAIL: \d+\]/g, '');
+                        output += '&nbsp;&nbsp;&nbsp;&nbsp;<span class="udp-dl-tx">' + udpDlTxLine + '</span>';
+                    } else if (line.includes("UDP-UL-Tx")) {
+                        // Modify this line to exclude "[ CUMM-TX-FAIL: 0]"
+                        var udpUlTxLine = line.replace(/\[ CUMM-TX-FAIL: \d+\]/g, '');
+                        output += '&nbsp;&nbsp;&nbsp;&nbsp;<span class="udp-ul-tx">' + udpUlTxLine + '</span>';
+                    }
+                }
+
+                // Output parsed result
+                document.getElementById("output").innerHTML = output;
+            };
+
+            // Read the file as text
+            reader.readAsText(file);
+        }
+
+        // Handle file selection and parsing
+        function handleFileUpload(event) {
+            var file = event.target.files[0]; // Get the first file
+            if (file) {
+                parseFile(file);
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h2>Parse cu_stats_XXX.txt Throughput upload</h2>
+    
+    <p style="margin: 0;">Author: Dustin_Chen, email: <a href="mailto:Dustin_Chen@compal.com"
+            style="line-height: 1;">Dustin_Chen@compal.com</a> or <a href="mailto:chuhpsdustin@gmail.com"
+            style="line-height: 1;">chuhpsdustin@gmail.com</a></p>
+    
+    <div>
+        <br>
+        <label for="fileInput">● Please upload the "cu_stats_XXX.txt" file:</label><br>
+        <input type="file" id="fileInput" accept=".txt" onchange="handleFileUpload(event)"><br>
+    </div>
+
+    <h4>Output:</h4>
+    <div id="output"></div>
+</body>
+
+</html>
